@@ -1,0 +1,89 @@
+.sidebar-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 680px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.sidebar-status {
+  color: #cbd5f5;
+  font-size: 0.95rem;
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: #f8fafc;
+  text-align: left;
+}
+
+.sidebar-item.active {
+  border-color: rgba(20, 184, 166, 0.55);
+  background: rgba(20, 184, 166, 0.14);
+}
+
+.sidebar-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.sidebar-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-name {
+  font-weight: 700;
+}
+
+.sidebar-preview {
+  color: #cbd5f5;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-badge {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.85rem;
+  display: grid;
+  place-items: center;
+  padding: 0 9px;
+}
