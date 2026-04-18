@@ -156,21 +156,21 @@ kill -9 <PID>  # Replace <PID> with process ID
 
 **Register User:**
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST https://monsoon-jqgy.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"John","email":"john@example.com","password":"Pass123!"}'
 ```
 
 **Login:**
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST https://monsoon-jqgy.onrender.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"john@example.com","password":"Pass123!"}'
 ```
 
 **Reset Password:**
 ```bash
-curl -X POST http://localhost:3000/api/auth/reset-password \
+curl -X POST https://monsoon-jqgy.onrender.com/api/auth/reset-password \
   -H "Content-Type: application/json" \
   -d '{"email":"john@example.com","oldPassword":"Pass123!","newPassword":"NewPass456!"}'
 ```

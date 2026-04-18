@@ -25,7 +25,7 @@ export default function HomePage() {
   const [status, setStatus] = useState('Loading conversations...');
   const recognitionRef = useRef(null);
 
-  const apiPrefix = 'http://localhost:3000/api/messages';
+  const apiPrefix = 'https://monsoon-jqgy.onrender.com/api/messages';
 
   const sidebarUsers = useMemo(() => {
     if (!user) return [];

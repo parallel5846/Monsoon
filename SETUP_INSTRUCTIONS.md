@@ -9,7 +9,7 @@ Frontend (React/Vite)
     ↓
 Registration/Login/ResetPass Components
     ↓
-API Requests (http://localhost:3000)
+API Requests (https://monsoon-jqgy.onrender.com)
     ↓
 Express Server
     ↓
@@ -97,7 +97,7 @@ If your server is running on a different port/host, update the API URLs in:
 
 Change:
 ```javascript
-"http://localhost:3000/api/auth/..."
+"https://monsoon-jqgy.onrender.com/api/auth/..."
 ```
 
 To your actual server URL.
@@ -116,7 +116,7 @@ Expected output:
 ✓ MongoDB connected successfully
 ✓ Database: dummy-project
 ✓ Host: localhost
-Server listening on http://localhost:3000
+Server listening on https://monsoon-jqgy.onrender.com
 ```
 
 ### Terminal 2: Start the Frontend
@@ -214,7 +214,7 @@ passwords: ["hashed_password_1", "hashed_password_2", "hashed_password_3"]
 
 ### Register
 ```
-POST http://localhost:3000/api/auth/register
+POST https://monsoon-jqgy.onrender.com/api/auth/register
 Content-Type: application/json
 
 {
@@ -226,7 +226,7 @@ Content-Type: application/json
 
 ### Login
 ```
-POST http://localhost:3000/api/auth/login
+POST https://monsoon-jqgy.onrender.com/api/auth/login
 Content-Type: application/json
 
 {
@@ -237,7 +237,7 @@ Content-Type: application/json
 
 ### Reset Password
 ```
-POST http://localhost:3000/api/auth/reset-password
+POST https://monsoon-jqgy.onrender.com/api/auth/reset-password
 Content-Type: application/json
 
 {
@@ -249,7 +249,7 @@ Content-Type: application/json
 
 ### Check Password History
 ```
-GET http://localhost:3000/api/password-history/:userId
+GET https://monsoon-jqgy.onrender.com/api/password-history/:userId
 ```
 
 ## File Structure
@@ -300,7 +300,7 @@ project/
 ```
 Access to XMLHttpRequest blocked by CORS policy
 ```
-- Make sure server is running on http://localhost:3000
+- Make sure server is running on https://monsoon-jqgy.onrender.com
 - Check that CORS is enabled in server.js
 - Verify frontend is making requests to correct API URL
 

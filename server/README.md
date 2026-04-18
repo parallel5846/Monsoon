@@ -42,13 +42,13 @@ Start the development server:
 npm start
 ```
 
-The server will run on `http://localhost:3000`
+The server will run on `https://monsoon-jqgy.onrender.com`
 
 ## API Routes
 
 ### Base URL
 ```
-http://localhost:3000/api/auth
+https://monsoon-jqgy.onrender.com/api/auth
 ```
 
 ### 1. Register User
@@ -185,7 +185,7 @@ All API endpoints return error responses with appropriate HTTP status codes:
 The frontend components (Registration, Login, ResetPass) make API calls to these endpoints:
 
 ```javascript
-fetch('http://localhost:3000/api/auth/register', {
+fetch('https://monsoon-jqgy.onrender.com/api/auth/register', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ name, email, password })

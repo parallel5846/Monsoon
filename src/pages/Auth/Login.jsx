@@ -19,7 +19,7 @@ export default function Login() {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch("https://monsoon-jqgy.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
