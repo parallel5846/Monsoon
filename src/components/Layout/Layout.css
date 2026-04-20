@@ -1,0 +1,26 @@
+.layout-grid {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Mobile: single column */
+@media (max-width: 767px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet: two columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .layout-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Desktop: three columns (optional) */
+@media (min-width: 1024px) {
+  .layout-grid {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}

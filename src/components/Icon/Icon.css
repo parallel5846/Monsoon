@@ -1,0 +1,10 @@
+.icon {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.icon.button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

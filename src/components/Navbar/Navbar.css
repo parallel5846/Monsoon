@@ -45,17 +45,19 @@
 }
 
 .navbar-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.08);
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  border: none;
+  background: transparent;
   color: white;
-  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .navbar-icon:hover {
   transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
 }

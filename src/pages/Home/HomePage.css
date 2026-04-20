@@ -108,17 +108,15 @@
 .voice-button,
 .send-button {
   border: none;
-  border-radius: 16px;
-  padding: 0 18px;
-  min-width: 60px;
+  background: transparent;
+  border-radius: 50%;
+  width: 52px;
   height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: white;
-  font-weight: 700;
   cursor: pointer;
-}
-
-.voice-button {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .voice-button.recording {
@@ -126,19 +124,21 @@
 }
 
 .send-button {
-  background: #14b8a6;
+  background: transparent;
 }
 
 .message-input {
   width: 100%;
-  min-height: 52px;
+  height: 52px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
   color: white;
-  padding: 14px 16px;
+  padding: 0 16px;
   font-size: 1rem;
-  resize: vertical;
+  line-height: 52px;
+  text-align: center;
+  resize: none;
 }
 
 .message-input:focus {

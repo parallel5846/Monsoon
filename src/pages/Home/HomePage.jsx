@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import Sidebar from '../../components/Home/Sidebar/Sidebar';
+import Icon from '../../components/Icon/Icon';
+import { FiMic, FiSend } from 'react-icons/fi';
 import './HomePage.css';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
@@ -198,26 +200,39 @@ export default function HomePage() {
           </div>
 
           <div className="messages-window">
-            {activeConversation?.messages?.length > 0 ? (
-              activeConversation.messages.map((message, index) => {
-                const isSelf = message.sender.toLowerCase() === user?.username.toLowerCase();
-                return (
-                  <div key={index} className={`message-row ${isSelf ? 'sent' : 'received'}`}>
-                    <div className={`message-bubble ${isSelf ? 'bubble-sent' : 'bubble-received'}`}>
-                      <p>{message.content}</p>
-                      <time>{formatTime(message.timestamp)}</time>
+            {activeConversation ? (
+              activeConversation.messages?.length > 0 ? (
+                activeConversation.messages.map((message, index) => {
+                  const isSelf = message.sender.toLowerCase() === user?.username.toLowerCase();
+                  return (
+                    <div key={index} className={`message-row ${isSelf ? 'sent' : 'received'}`}>
+                      <div className={`message-bubble ${isSelf ? 'bubble-sent' : 'bubble-received'}`}>
+                        <p>{message.content}</p>
+                        <time>{formatTime(message.timestamp)}</time>
+                      </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })
+              ) : (
+                <div className="empty-state">
+                  {activeConversation.chatId
+                    ? 'No messages in this conversation yet. Send a message to start chatting.'
+                    : 'Select a conversation to view messages.'}
+                </div>
+              )
             ) : (
               <div className="empty-state">Select a conversation to view messages.</div>
             )}
           </div>
 
           <div className="chat-input-shell">
-            <button className={`voice-button ${isListening ? 'recording' : ''}`} type="button" onClick={startVoiceInput}>
-              {isListening ? 'Listening...' : '🎙️'}
+            <button
+              className={`voice-button ${isListening ? 'recording' : ''}`}
+              type="button"
+              onClick={startVoiceInput}
+              aria-label={isListening ? 'Listening' : 'Start voice input'}
+            >
+              <Icon component={FiMic} title={isListening ? 'Listening' : 'Voice input'} />
             </button>
             <textarea
               className="message-input"
@@ -225,8 +240,8 @@ export default function HomePage() {
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
             />
-            <button className="send-button" type="button" onClick={handleSend}>
-              Send
+            <button className="send-button" type="button" onClick={handleSend} aria-label="Send message">
+              <Icon component={FiSend} title="Send message" />
             </button>
           </div>
         </main>
