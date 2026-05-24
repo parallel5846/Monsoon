@@ -15,7 +15,7 @@ export default function Navbar({ user }) {
   return (
     <header className="navbar-shell">
       <div className="navbar-brand">
-        <div className="navbar-logo">M</div>
+        <div className="navbar-logo"><img src="/favicon.png" alt="favicon.png" /></div>
         <div>
           <span className="navbar-title">Monsoon</span>
           <span className="navbar-subtitle">Secure chat dashboard</span>
