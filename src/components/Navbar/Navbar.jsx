@@ -1,12 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import Icon from '../Icon/Icon';
-import { FiArrowLeft, FiCamera, FiMoreVertical } from 'react-icons/fi';
+import {
+  FiArrowLeft,
+  FiCamera,
+  FiMoreVertical,
+  FiX,
+  FiRotateCcw,
+  FiPlay,
+  FiStopCircle,
+} from 'react-icons/fi';
 
 export default function Navbar({ user, showBackButton = false, onBack }) {
   const [showMenu, setShowMenu] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [facingMode, setFacingMode] = useState('user');
+  const [mirrored, setMirrored] = useState(false);
+  const [stream, setStream] = useState(null);
+  const [cameraError, setCameraError] = useState('');
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
+  const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [cameraMessage, setCameraMessage] = useState('');
   const navigate = useNavigate();
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const recorderRef = useRef(null);
+  const mediaChunksRef = useRef([]);
 
   const handleMenuClick = (action) => {
     console.log(`Action: ${action}`);
@@ -25,8 +46,108 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
     navigate('/');
   };
 
+  const stopCameraStream = () => {
+    if (recorderRef.current?.state === 'recording') {
+      recorderRef.current.stop();
+    }
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    setStream(null);
+    setIsRecording(false);
+  };
+
+  const openCamera = async () => {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError('Camera not supported in this browser');
+      return;
+    }
+
+    try {
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode },
+        audio: true,
+      });
+      setCameraError('');
+      setStream(newStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = newStream;
+      }
+      setCameraMessage('Camera ready');
+    } catch (error) {
+      console.error(error);
+      setCameraError('Unable to access camera. Please allow permission and try again.');
+    }
+  };
+
+  useEffect(() => {
+    if (!showCamera) {
+      stopCameraStream();
+      return;
+    }
+    openCamera();
+    return () => stopCameraStream();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCamera, facingMode]);
+
+  const toggleFacingMode = () => {
+    setFacingMode((current) => (current === 'user' ? 'environment' : 'user'));
+  };
+
+  const toggleMirror = () => {
+    setMirrored((current) => !current);
+  };
+
+  const captureImage = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (mirrored) {
+      ctx.setTransform(-1, 0, 0, 1, canvas.width, 0);
+    } else {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const dataUrl = canvas.toDataURL('image/png');
+    setCapturedPhoto(dataUrl);
+    setCameraMessage('Photo captured');
+  };
+
+  const startRecording = () => {
+    if (!stream) return;
+    mediaChunksRef.current = [];
+    const recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        mediaChunksRef.current.push(event.data);
+      }
+    };
+    recorder.onstop = () => {
+      const blob = new Blob(mediaChunksRef.current, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      setRecordedVideoUrl(url);
+      setCameraMessage('Video recorded');
+    };
+    recorder.start();
+    recorderRef.current = recorder;
+    setIsRecording(true);
+    setCameraMessage('Recording...');
+  };
+
+  const stopRecording = () => {
+    if (recorderRef.current && recorderRef.current.state === 'recording') {
+      recorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
   return (
-    <header className="navbar-shell">
+    <>
+      <header className="navbar-shell">
       <div className="navbar-brand">
         {showBackButton && (
           <button className="navbar-back-button" type="button" onClick={onBack} aria-label="Back to chats">
@@ -40,8 +161,8 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
       </div>
 
       <div className="navbar-actions">
-        <button className="navbar-icon" aria-label="Scan QR" type="button">
-          <Icon component={FiCamera} size={24} title="Scan QR" />
+        <button className="navbar-icon" aria-label="Open camera" type="button" onClick={() => setShowCamera(true)}>
+          <Icon component={FiCamera} size={24} title="Open camera" />
         </button>
         <div className="menu-container">
           <button
@@ -97,5 +218,96 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
         </div>
       </div>
     </header>
+
+      {showCamera && (
+        <div className="camera-modal" role="dialog" aria-modal="true" aria-label="Camera capture">
+          <div className="camera-card">
+            <div className="camera-toolbar">
+              <button
+                className="camera-close"
+                type="button"
+                onClick={() => setShowCamera(false)}
+                aria-label="Close camera"
+              >
+                <Icon component={FiX} size={20} title="Close camera" />
+              </button>
+              <div className="camera-switches">
+                <button
+                  type="button"
+                  className="camera-toggle"
+                  onClick={toggleFacingMode}
+                  aria-label={`Switch to ${facingMode === 'user' ? 'back' : 'front'} camera`}
+                >
+                  <Icon component={FiRotateCcw} size={20} title="Switch camera" />
+                </button>
+                <button
+                  type="button"
+                  className="camera-toggle"
+                  onClick={toggleMirror}
+                  aria-label={mirrored ? 'Disable mirror' : 'Enable mirror'}
+                >
+                  <Icon component={FiRotateCcw} size={20} title="Toggle mirror" />
+                </button>
+              </div>
+            </div>
+            <div className="camera-view">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className={mirrored ? 'camera-video mirror' : 'camera-video'}
+              />
+              <canvas ref={canvasRef} style={{ display: 'none' }} />
+              <div className="camera-actions">
+                <button
+                  type="button"
+                  className="camera-button"
+                  onClick={captureImage}
+                  aria-label="Capture photo"
+                >
+                  <Icon component={FiCamera} size={24} title="Capture photo" />
+                </button>
+                {!isRecording ? (
+                  <button
+                    type="button"
+                    className="camera-button camera-record"
+                    onClick={startRecording}
+                    aria-label="Start recording"
+                  >
+                    <Icon component={FiPlay} size={24} title="Start recording" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="camera-button camera-stop"
+                    onClick={stopRecording}
+                    aria-label="Stop recording"
+                  >
+                    <Icon component={FiStopCircle} size={24} title="Stop recording" />
+                  </button>
+                )}
+              </div>
+              {cameraMessage && <div className="camera-status">{cameraMessage}</div>}
+              {cameraError && <div className="camera-error">{cameraError}</div>}
+              <div className="camera-preview-row">
+                {capturedPhoto && (
+                  <div className="camera-preview">
+                    <span>Photo</span>
+                    <img src={capturedPhoto} alt="Captured" />
+                  </div>
+                )}
+                {recordedVideoUrl && (
+                  <div className="camera-preview">
+                    <span>Video</span>
+                    <video controls src={recordedVideoUrl} className="camera-video-preview" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
