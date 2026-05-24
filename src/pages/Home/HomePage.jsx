@@ -4,6 +4,7 @@ import Sidebar from '../../components/Home/Sidebar/Sidebar';
 import Icon from '../../components/Icon/Icon';
 import { FiMic, FiSend } from 'react-icons/fi';
 import './HomePage.css';
+import '../../mobile.css';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
@@ -22,8 +23,10 @@ export default function HomePage() {
   const [users, setUsers] = useState([]);
   const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [messageText, setMessageText] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 980);
   const [status, setStatus] = useState('Loading conversations...');
   const recognitionRef = useRef(null);
 
@@ -52,17 +55,27 @@ export default function HomePage() {
     });
   }, [users, chatList, user]);
 
-  const activeConversation = useMemo(() => {
-    if (activeChat) return activeChat;
-    if (sidebarUsers.length > 0) return sidebarUsers[0];
-    return null;
-  }, [activeChat, sidebarUsers]);
+  const activeConversation = activeChat;
 
   useEffect(() => {
-    if (!activeChat && sidebarUsers.length > 0) {
-      setActiveChat(sidebarUsers[0]);
+    const updateMobile = () => {
+      const mobile = window.innerWidth <= 980;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setSidebarOpen(true);
+      }
+    };
+
+    updateMobile();
+    window.addEventListener('resize', updateMobile);
+    return () => window.removeEventListener('resize', updateMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && activeChat) {
+      setSidebarOpen(false);
     }
-  }, [sidebarUsers, activeChat]);
+  }, [isMobile, activeChat]);
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -131,6 +144,9 @@ export default function HomePage() {
 
   const openChat = async (chat) => {
     setActiveChat(chat);
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
     if (!user) return;
     try {
       const response = await fetch(`${apiPrefix}/conversation/${chat.chatId}/${user.username}`);
@@ -187,17 +203,24 @@ export default function HomePage() {
 
   return (
     <div className="home-shell">
-      <Navbar user={user} />
+      <Navbar
+        user={user}
+        showBackButton={isMobile && !sidebarOpen && !!activeConversation}
+        onBack={() => setSidebarOpen(true)}
+      />
       <div className="home-body">
-        <Sidebar chats={sidebarUsers} activeChatId={activeConversation?.chatId} onSelectChat={openChat} />
+        {(!isMobile || sidebarOpen) && (
+          <Sidebar chats={sidebarUsers} activeChatId={activeConversation?.chatId} onSelectChat={openChat} />
+        )}
 
-        <main className="chat-panel">
-          <div className="chat-topbar">
-            <div>
-              <h2>{activeConversation ? activeConversation.profileName : 'No active chat'}</h2>
-              <p>{activeConversation ? `Last message: ${activeConversation.lastMessage}` : status}</p>
+        {(!isMobile || !sidebarOpen) && (
+          <main className="chat-panel">
+            <div className="chat-topbar">
+              <div>
+                <h2>{activeConversation ? activeConversation.profileName : 'No active chat'}</h2>
+                <p>{activeConversation ? `Last message: ${activeConversation.lastMessage}` : status}</p>
+              </div>
             </div>
-          </div>
 
           <div className="messages-window">
             {activeConversation ? (
@@ -225,26 +248,27 @@ export default function HomePage() {
             )}
           </div>
 
-          <div className="chat-input-shell">
-            <button
-              className={`voice-button ${isListening ? 'recording' : ''}`}
-              type="button"
-              onClick={startVoiceInput}
-              aria-label={isListening ? 'Listening' : 'Start voice input'}
-            >
-              <Icon component={FiMic} title={isListening ? 'Listening' : 'Voice input'} />
-            </button>
-            <textarea
-              className="message-input"
-              placeholder="Type your message..."
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-            />
-            <button className="send-button" type="button" onClick={handleSend} aria-label="Send message">
-              <Icon component={FiSend} title="Send message" />
-            </button>
-          </div>
-        </main>
+            <div className="chat-input-shell">
+              <button
+                className={`voice-button ${isListening ? 'recording' : ''}`}
+                type="button"
+                onClick={startVoiceInput}
+                aria-label={isListening ? 'Listening' : 'Start voice input'}
+              >
+                <Icon component={FiMic} title={isListening ? 'Listening' : 'Voice input'} />
+              </button>
+              <textarea
+                className="message-input"
+                placeholder="Type your message..."
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+              />
+              <button className="send-button" type="button" onClick={handleSend} aria-label="Send message">
+                <Icon component={FiSend} title="Send message" />
+              </button>
+            </div>
+          </main>
+        )}
       </div>
     </div>
   );

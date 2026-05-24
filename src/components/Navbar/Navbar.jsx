@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './Navbar.css';
 import Icon from '../Icon/Icon';
-import { FiCamera, FiMoreVertical } from 'react-icons/fi';
+import { FiArrowLeft, FiCamera, FiMoreVertical } from 'react-icons/fi';
 
-export default function Navbar({ user }) {
+export default function Navbar({ user, showBackButton = false, onBack }) {
   const [showMenu, setShowMenu] = useState(false);
 
   const handleMenuClick = (action) => {
@@ -15,10 +15,14 @@ export default function Navbar({ user }) {
   return (
     <header className="navbar-shell">
       <div className="navbar-brand">
+        {showBackButton && (
+          <button className="navbar-back-button" type="button" onClick={onBack} aria-label="Back to chats">
+            <Icon component={FiArrowLeft} size={24} title="Back to chats" />
+          </button>
+        )}
         <div className="navbar-logo"><img src="/favicon.png" alt="favicon.png" /></div>
         <div>
           <span className="navbar-title">Monsoon</span>
-          <span className="navbar-subtitle">Secure chat dashboard</span>
         </div>
       </div>
 
