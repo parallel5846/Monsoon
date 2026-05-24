@@ -8,6 +8,7 @@ import {
   FiMoreVertical,
   FiX,
   FiRotateCcw,
+  FiRotateCw,
   FiPlay,
   FiStopCircle,
 } from 'react-icons/fi';
@@ -21,6 +22,8 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
   const [cameraError, setCameraError] = useState('');
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [cameraMessage, setCameraMessage] = useState('');
   const navigate = useNavigate();
@@ -73,7 +76,9 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
       if (videoRef.current) {
         videoRef.current.srcObject = newStream;
       }
-      setCameraMessage('Camera ready');
+      setCameraMessage(
+        facingMode === 'environment' ? 'Back camera ready' : 'Front camera ready'
+      );
     } catch (error) {
       console.error(error);
       setCameraError('Unable to access camera. Please allow permission and try again.');
@@ -98,6 +103,14 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
     setMirrored((current) => !current);
   };
 
+  const setBackCamera = () => {
+    setFacingMode('environment');
+  };
+
+  const setFrontCamera = () => {
+    setFacingMode('user');
+  };
+
   const captureImage = () => {
     if (!videoRef.current || !canvasRef.current) return;
     const video = videoRef.current;
@@ -114,6 +127,7 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     const dataUrl = canvas.toDataURL('image/png');
     setCapturedPhoto(dataUrl);
+    setShowPhotoModal(true);
     setCameraMessage('Photo captured');
   };
 
@@ -130,6 +144,7 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
       const blob = new Blob(mediaChunksRef.current, { type: 'video/webm' });
       const url = URL.createObjectURL(blob);
       setRecordedVideoUrl(url);
+      setShowVideoModal(true);
       setCameraMessage('Video recorded');
     };
     recorder.start();
@@ -235,10 +250,18 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
                 <button
                   type="button"
                   className="camera-toggle"
+                  onClick={setBackCamera}
+                  aria-label="Use back camera"
+                >
+                  <Icon component={FiRotateCw} size={18} title="Use back camera" />
+                </button>
+                <button
+                  type="button"
+                  className="camera-toggle"
                   onClick={toggleFacingMode}
                   aria-label={`Switch to ${facingMode === 'user' ? 'back' : 'front'} camera`}
                 >
-                  <Icon component={FiRotateCcw} size={20} title="Switch camera" />
+                  <Icon component={FiRotateCcw} size={18} title="Switch camera" />
                 </button>
                 <button
                   type="button"
@@ -246,7 +269,7 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
                   onClick={toggleMirror}
                   aria-label={mirrored ? 'Disable mirror' : 'Enable mirror'}
                 >
-                  <Icon component={FiRotateCcw} size={20} title="Toggle mirror" />
+                  <Icon component={FiRotateCcw} size={18} title="Toggle mirror" />
                 </button>
               </div>
             </div>
@@ -292,19 +315,61 @@ export default function Navbar({ user, showBackButton = false, onBack }) {
               {cameraError && <div className="camera-error">{cameraError}</div>}
               <div className="camera-preview-row">
                 {capturedPhoto && (
-                  <div className="camera-preview">
+                  <button
+                    type="button"
+                    className="camera-preview"
+                    onClick={() => setShowPhotoModal(true)}
+                    aria-label="Open captured photo"
+                  >
                     <span>Photo</span>
                     <img src={capturedPhoto} alt="Captured" />
-                  </div>
+                  </button>
                 )}
                 {recordedVideoUrl && (
-                  <div className="camera-preview">
+                  <button
+                    type="button"
+                    className="camera-preview"
+                    onClick={() => setShowVideoModal(true)}
+                    aria-label="Open recorded video"
+                  >
                     <span>Video</span>
                     <video controls src={recordedVideoUrl} className="camera-video-preview" />
-                  </div>
+                  </button>
                 )}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showPhotoModal && capturedPhoto && (
+        <div className="preview-modal" role="dialog" aria-modal="true" aria-label="Captured photo preview">
+          <div className="preview-card">
+            <button
+              type="button"
+              className="preview-close"
+              onClick={() => setShowPhotoModal(false)}
+              aria-label="Close photo preview"
+            >
+              <Icon component={FiX} size={18} title="Close photo preview" />
+            </button>
+            <img src={capturedPhoto} alt="Captured preview" className="preview-image" />
+          </div>
+        </div>
+      )}
+
+      {showVideoModal && recordedVideoUrl && (
+        <div className="preview-modal" role="dialog" aria-modal="true" aria-label="Recorded video preview">
+          <div className="preview-card preview-video-card">
+            <button
+              type="button"
+              className="preview-close"
+              onClick={() => setShowVideoModal(false)}
+              aria-label="Close video preview"
+            >
+              <Icon component={FiX} size={18} title="Close video preview" />
+            </button>
+            <video controls src={recordedVideoUrl} className="preview-video" />
           </div>
         </div>
       )}
