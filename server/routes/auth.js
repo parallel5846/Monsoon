@@ -110,6 +110,38 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Profile Route
+router.get('/profile/:username', async (req, res) => {
+  try {
+    const username = req.params.username.toLowerCase();
+    const safeUsername = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const user = await User.findOne({ username: new RegExp(`^${safeUsername}$`, 'i') }).lean();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email || '',
+      },
+    });
+  } catch (error) {
+    console.error('Fetch profile error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error fetching profile',
+      error: error.message,
+    });
+  }
+});
+
 // Reset Password Route (using old password)
 router.post('/reset-password', async (req, res) => {
   try {

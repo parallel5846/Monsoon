@@ -5,6 +5,7 @@ import Login from "./pages/Auth/Login";
 import Registration from "./pages/Auth/Registration";
 import ResetPass from "./pages/Auth/ResetPass";
 import HomePage from "./pages/Home/HomePage";
+import Profile from "./pages/Profile/Profile";
 import NotFound from "./NotFound";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
 
         {/* Home Chat */}
         <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

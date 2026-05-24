@@ -92,9 +92,51 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 8px 0;
-  min-width: 160px;
+  min-width: 220px;
   z-index: 1000;
   backdrop-filter: blur(10px);
+}
+
+.dropdown-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+}
+
+.dropdown-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #0f172a;
+  border: 1px solid rgba(248, 250, 252, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #14b8a6;
+}
+
+.dropdown-profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-profile-text span {
+  font-weight: 700;
+}
+
+.dropdown-profile-text small {
+  font-size: 0.8rem;
+  color: #cbd5f5;
+}
+
+.dropdown-separator {
+  height: 1px;
+  margin: 6px 0;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .dropdown-item {
