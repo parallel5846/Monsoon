@@ -37,7 +37,7 @@ A complete authentication system with password history management has been imple
 
 **Utilities:**
 - `server/utils/passwordUtils.js` - Password utility functions
-  - Password hashing with bcrypt
+  - Password hashing with bcrypt 
   - Password comparison
   - Password strength checking
   - History validation
@@ -207,7 +207,7 @@ NODE_ENV=development
 6. **2FA Support**: Add two-factor authentication
 7. **Dashboard**: Create user dashboard after login
 8. **Profile Management**: Allow users to update profile
-9. **Tests**: Add unit and integration tests
+9. **Tests**: Add unit and integration tests 
 10. **Deployment**: Deploy to production services
 
 ## File Structure Summary
@@ -239,8 +239,8 @@ NODE_ENV=development
 
 ## Installation Command Summary
 
-```bash
-# Backend setup
+```bash 
+# Backend setup 
 cd server
 npm install
 
@@ -259,7 +259,7 @@ npm start
 npm run dev
 ```
 
-## Notes
+## Notes 
 
 - All passwords are securely hashed using bcrypt with 10 salt rounds
 - Email addresses are unique and case-insensitive

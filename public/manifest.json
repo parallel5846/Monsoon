@@ -1,7 +1,7 @@
 {
-  "name": "My MERN App",
-  "short_name": "MERNApp",
-  "description": "A full-stack MERN application",
+  "name": "MONSOON",
+  "short_name": "Me",
+  "description": "A real time chat app",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
