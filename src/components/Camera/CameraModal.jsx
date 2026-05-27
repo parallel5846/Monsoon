@@ -1,9 +1,6 @@
 import Icon from '../Icon/Icon';
-import { FiX, FiCamera } from 'react-icons/fi';
-import { FaCameraRotate } from 'react-icons/fa6';
-import { IoPause } from 'react-icons/io5';
-import { FaPlay, FaStop } from 'react-icons/fa6';
-import PreviewArea from './PreviewArea';
+import { FiX, FiCamera, FiImage } from 'react-icons/fi';
+import { FaCameraRotate, FaStop, FaVideo } from 'react-icons/fa6';
 
 export default function CameraModal({
   videoRef,
@@ -15,11 +12,9 @@ export default function CameraModal({
   capturedPhoto,
   recordedVideoUrl,
   isRecording,
-  isPaused,
   onClose,
   onToggleCameraMode,
   onCaptureImage,
-  onTogglePause,
   onStartRecording,
   onStopRecording,
   onOpenPhotoModal,
@@ -60,23 +55,19 @@ export default function CameraModal({
           <div className="camera-actions">
             <button
               type="button"
+              className="camera-button camera-album"
+              onClick={onOpenPhotoModal}
+              aria-label="Open album"
+            >
+              <Icon component={FiImage} size={20} title="Album" />
+            </button>
+            <button
+              type="button"
               className="camera-button"
               onClick={onCaptureImage}
               aria-label="Capture photo"
             >
               <Icon component={FiCamera} size={24} title="Capture photo" />
-            </button>
-            <button
-              type="button"
-              className="camera-button camera-pause"
-              onClick={onTogglePause}
-              aria-label={isPaused ? 'Resume preview' : 'Pause preview'}
-            >
-              <Icon
-                component={isPaused ? FaPlay : IoPause}
-                size={24}
-                title={isPaused ? 'Resume preview' : 'Pause preview'}
-              />
             </button>
             {!isRecording ? (
               <button
@@ -85,7 +76,7 @@ export default function CameraModal({
                 onClick={onStartRecording}
                 aria-label="Start recording"
               >
-                <Icon component={FaPlay} size={24} title="Start recording" />
+                <Icon component={FaVideo} size={24} title="Start video recording" />
               </button>
             ) : (
               <button
@@ -100,12 +91,6 @@ export default function CameraModal({
           </div>
           {cameraMessage && <div className="camera-status">{cameraMessage}</div>}
           {cameraError && <div className="camera-error">{cameraError}</div>}
-          <PreviewArea
-            capturedPhoto={capturedPhoto}
-            recordedVideoUrl={recordedVideoUrl}
-            onOpenPhotoModal={onOpenPhotoModal}
-            onOpenVideoModal={onOpenVideoModal}
-          />
         </div>
       </div>
     </div>

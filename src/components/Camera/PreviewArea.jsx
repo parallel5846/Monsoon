@@ -16,7 +16,7 @@ export default function PreviewArea({
       {capturedPhoto && (
         <button
           type="button"
-          className="camera-preview"
+          className="camera-preview-item"
           onClick={onOpenPhotoModal}
           aria-label="Open captured photo"
         >
@@ -28,7 +28,7 @@ export default function PreviewArea({
       {recordedVideoUrl && (
         <button
           type="button"
-          className="camera-preview"
+          className="camera-preview-item"
           onClick={onOpenVideoModal}
           aria-label="Open recorded video"
         >

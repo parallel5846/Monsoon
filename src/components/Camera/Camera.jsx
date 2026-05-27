@@ -14,7 +14,6 @@ export default function Camera({ showCamera, onClose }) {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [cameraMessage, setCameraMessage] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -30,7 +29,6 @@ export default function Camera({ showCamera, onClose }) {
     }
     setStream(null);
     setIsRecording(false);
-    setIsPaused(false);
   };
 
   const openCamera = async () => {
@@ -67,20 +65,6 @@ export default function Camera({ showCamera, onClose }) {
     return () => stopCameraStream();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCamera, facingMode]);
-
-  useEffect(() => {
-    if (!videoRef.current) {
-      return;
-    }
-
-    if (isPaused) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play().catch(() => {
-        /* ignore autoplay block */
-      });
-    }
-  }, [isPaused]);
 
   const toggleCameraMode = () => {
     setFacingMode((currentFacing) =>
@@ -138,14 +122,6 @@ export default function Camera({ showCamera, onClose }) {
     setIsRecording(false);
   };
 
-  const togglePausePreview = () => {
-    setIsPaused((current) => {
-      const nextPaused = !current;
-      setCameraMessage(nextPaused ? 'Preview paused' : 'Preview resumed');
-      return nextPaused;
-    });
-  };
-
   const handleClose = () => {
     stopCameraStream();
     onClose();
@@ -165,11 +141,9 @@ export default function Camera({ showCamera, onClose }) {
         capturedPhoto={capturedPhoto}
         recordedVideoUrl={recordedVideoUrl}
         isRecording={isRecording}
-        isPaused={isPaused}
         onClose={handleClose}
         onToggleCameraMode={toggleCameraMode}
         onCaptureImage={captureImage}
-        onTogglePause={togglePausePreview}
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
         onOpenPhotoModal={() => setShowPhotoModal(true)}

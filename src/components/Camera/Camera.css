@@ -117,11 +117,11 @@
 
 .camera-preview-row {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
-.camera-preview {
+.camera-preview-item {
   display: grid;
   gap: 8px;
   color: inherit;
@@ -135,22 +135,39 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.camera-preview:hover {
+.camera-preview-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
 }
 
-.camera-preview span {
+.camera-preview-item span {
   color: #cbd5f5;
   font-size: 0.9rem;
 }
 
-.camera-preview img,
+.camera-preview-item img,
 .camera-video-preview {
   width: 100%;
   border-radius: 14px;
-  max-height: 260px;
+  max-height: 180px;
   object-fit: cover;
+}
+
+.camera-button.camera-album {
+  width: 34px;
+  height: 34px;
+  border-radius: 14px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.camera-button.camera-album:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .preview-modal {
@@ -227,5 +244,19 @@
   .camera-button,
   .camera-close {
     width: 100%;
+  }
+
+  .camera-preview-row {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 10px;
+  }
+
+  .camera-preview-item {
+    padding: 8px;
+  }
+
+  .camera-preview img,
+  .camera-video-preview {
+    max-height: 120px;
   }
 }
